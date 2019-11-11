@@ -18,10 +18,12 @@ else:
 def before_request():
     db.connect()
 
-
 @app.teardown_request
 def _db_close(exc):
     if not db.is_closed():
         print(db)
         print(db.close())
     return exc
+
+
+
