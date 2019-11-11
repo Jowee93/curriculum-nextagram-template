@@ -2,6 +2,9 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from models.user import *
 from werkzeug.security import check_password_hash
 import time
+from flask_login import current_user, login_user, logout_user, LoginManager
+
+
 
 sessions_blueprint = Blueprint('sessions',
                             __name__,
@@ -9,10 +12,13 @@ sessions_blueprint = Blueprint('sessions',
 
 
 
-
 @sessions_blueprint.route('/signin', methods=['GET'])
 def sign_in():
     return render_template('sessions/sign_in.html')
+
+#############################
+# Option 1 : Session method #
+#############################
 
 
 @sessions_blueprint.route('/signin', methods=['POST'])
@@ -21,7 +27,7 @@ def handle_sign_in():
     password = request.form.get("password")
     
     user = User.get_or_none(username=username)
-    
+
     if user:
         result = check_password_hash(user.password, password)
         
@@ -36,9 +42,14 @@ def handle_sign_in():
         
     else:
         pass
+    
+#################################
+# Option 2 : Flask-Login method #
+#################################
 
 @sessions_blueprint.route('/signout')
 def handle_sign_out():
+    
     session.pop('user_id', None)
     flash("You have successfully logged out", "success")
     return redirect(url_for('sessions.sign_in'))
