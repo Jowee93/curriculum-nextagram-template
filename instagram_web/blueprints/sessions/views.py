@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from models.user import *
 from werkzeug.security import check_password_hash
+import time
 
 sessions_blueprint = Blueprint('sessions',
                             __name__,
@@ -16,9 +17,28 @@ def sign_in():
 
 @sessions_blueprint.route('/signin', methods=['POST'])
 def handle_sign_in():
+    username = request.form.get("username")
+    password = request.form.get("password")
     
-    username = request.forms.get("username")
-    password = request.forms.get("password")
+    user = User.get_or_none(username=username)
     
-    
-    return render_template('sessions/sign_in.html')
+    if user:
+        result = check_password_hash(user.password, password)
+        
+        if result:
+            flash("You are logged in", "success")
+            session["user_id"] = user.id
+            return redirect("/")
+        
+        else:
+            flash("Log in fail, please try again", "danger")
+            return render_template('sessions/sign_in.html')
+        
+    else:
+        pass
+
+@sessions_blueprint.route('/signout')
+def handle_sign_out():
+    session.pop('user_id', None)
+    flash("You have successfully logged out", "success")
+    return redirect(url_for('sessions.sign_in'))
