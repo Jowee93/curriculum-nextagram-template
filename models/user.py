@@ -7,6 +7,7 @@ class User(UserMixin, BaseModel):
     username = pw.CharField(unique=True, null=True)
     email = pw.CharField(null=True, unique=True)
     password = pw.CharField(null=True)
+    role = pw.CharField(default="user")
     
     def validate(self):
         duplicate_useremail = User.get_or_none(User.email == self.email)
@@ -14,7 +15,7 @@ class User(UserMixin, BaseModel):
         if duplicate_useremail:
             self.errors.append('Email has been taken. Please try another email')
             
-    # def is_authenticated(self):
-    #     return True
+    def is_authenticated(self):
+        return True
             
 

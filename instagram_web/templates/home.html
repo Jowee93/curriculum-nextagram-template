@@ -1,5 +1,14 @@
 {% extends "_layout.html" %}
 
+{% block title %}
+  Homepage
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+
 {% with messages = get_flashed_messages(with_categories=true)
 %} 
 
@@ -11,13 +20,6 @@
 
 {% endfor %} {% endif %} {% endwith %}
 
-{% block title %}
-  Homepage
-{% endblock %}
-
-{% block header %}
-{% endblock %}
-
-{% block content %}
   <h1>Homepage</h1>
+  
 {% endblock %}

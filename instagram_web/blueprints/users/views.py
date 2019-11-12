@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.user import *
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import login_required, current_user
 import re
+
 
 
 users_blueprint = Blueprint('users',
@@ -53,13 +55,55 @@ def index():
 
 
 @users_blueprint.route('/<id>/edit', methods=['GET'])
+@login_required
 def edit(id):
-    pass
-
-
+    user = User.get_by_id(id)
+    
+    if current_user.id == user.id:
+        return render_template('/users/edit.html', user_id=user.id)
+    else:
+        flash("You are not authorized to access this page", "danger")
+        return render_template('/users/edit.html', user_id=user.id)
+    
+    
 @users_blueprint.route('/<id>', methods=['POST'])
+@login_required
 def update(id):
-    pass
-
+    user = User.get_by_id(id)
+    username = request.form.get("username")
+    email = request.form.get("email")
+    password = request.form.get("password")
+    
+    result = check_password_hash(user.password, password)
+    
+    if result:
+        if user.email == email:
+            update_user = User(id=user.id, username=username)
+            if update_user.save(only=[User.username]):
+                flash(f"Successfully updated profile for: {current_user.username}", "success")
+                return redirect(url_for('users.edit', id=current_user.id))
+            else:
+                flash(f"Error: {update_user.errors}", "danger")
+                return redirect(url_for('users.edit', id=current_user.id))
+        else:
+            update_user = User(id=user.id, username=username, email=email)
+            if update_user.save():
+                flash(f"Successfully updated profile for: {current_user.username}", "success")
+                return redirect(url_for('users.edit', id=current_user.id))
+            else:
+                flash(f"Error: {update_user.errors}", "danger")
+                return redirect(url_for('users.edit', id=current_user.id))
+    else:
+        flash("Password incorrect, please try again", "danger")
+        return render_template('/users/edit.html', user_id=user.id)
+    
+    
+@users_blueprint.route('/<id>/upload', methods=['GET'])
+@login_required
+def image(id):
+    
+    user = User.get_by_id(id)
+    return render_template('users/upload.html')
+    
 
 

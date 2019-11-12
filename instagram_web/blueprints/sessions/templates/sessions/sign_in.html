@@ -1,7 +1,8 @@
-{% extends "_layout.html" %} {% block content %}
+{% extends "_layout.html" %} 
 
-{% with messages = get_flashed_messages(with_categories=true)
-%} 
+{% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %} 
 
 {% if messages %} 
 
@@ -11,12 +12,16 @@
 
 {% endfor %} {% endif %} {% endwith %}
 
-
 <div class="m-3">
   <h1>Sign In</h1>
 </div>
 
-<form class="mx-3" action="{{ url_for('sessions.handle_sign_in') }}" method="POST">
+<form
+  class="mx-3"
+  action="{{ url_for('sessions.handle_sign_in') }}"
+  method="POST"
+>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
   <div class="form-group">
     <label for="exampleInputEmail1">Username</label>
     <input

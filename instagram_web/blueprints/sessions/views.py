@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from models.user import *
 from werkzeug.security import check_password_hash
 import time
-from flask_login import current_user, login_user, logout_user, LoginManager
+from flask_login import current_user, login_user, logout_user, LoginManager, login_required
 
 
 
@@ -14,6 +14,7 @@ sessions_blueprint = Blueprint('sessions',
 
 @sessions_blueprint.route('/signin', methods=['GET'])
 def sign_in():
+    
     return render_template('sessions/sign_in.html')
 
 #############################
@@ -33,23 +34,28 @@ def handle_sign_in():
         
         if result:
             flash("You are logged in", "success")
-            session["user_id"] = user.id
+            login_user(user)
+            # session["user_id"] = user.id
             return redirect("/")
         
         else:
             flash("Log in fail, please try again", "danger")
             return render_template('sessions/sign_in.html')
-        
+    
     else:
-        pass
+        flash("Username or Password is incorrect. Please try again", "danger")
+        return render_template('sessions/sign_in.html')
+    
+
     
 #################################
 # Option 2 : Flask-Login method #
 #################################
 
 @sessions_blueprint.route('/signout')
+@login_required
 def handle_sign_out():
-    
-    session.pop('user_id', None)
+    logout_user()
+    # session.pop('user_id', None)
     flash("You have successfully logged out", "success")
     return redirect(url_for('sessions.sign_in'))
