@@ -10,7 +10,6 @@ s3 = boto3.client(
 def upload_file_to_s3(file, acl="public-read"):
     
     try:
-
         s3.upload_fileobj(
             file,
             Config.S3_BUCKET,
@@ -21,9 +20,9 @@ def upload_file_to_s3(file, acl="public-read"):
             }
         )
         
-        return f"{Config.S3_LOCATION}{file.filename}"
-
     except Exception as e:
         # This is a catch all exception, edit this part to fit your needs.
         print("Something Happened: ", e)
         return e
+    
+    return f"{Config.S3_LOCATION}{file.filename}"

@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.user import *
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug import secure_filename
 from flask_login import login_required, current_user
+from instagram_web.util.helpers import *    
 import re
 
 
@@ -98,12 +100,48 @@ def update(id):
         return render_template('/users/edit.html', user_id=user.id)
     
     
-@users_blueprint.route('/<id>/upload', methods=['GET'])
+@users_blueprint.route('/<id>/uploadimage', methods=['GET'])
 @login_required
 def image(id):
     
     user = User.get_by_id(id)
     return render_template('users/upload.html')
+
+@users_blueprint.route('/<id>/upload', methods=['POST'])
+@login_required
+def upload(id):
+    
+    # Retrieves file from upload form
+    file = request.files.get("user_file")
+    
+    user = User.get_by_id(id)
+    
+    if not file:
+        flash("Please choose a file to upload", "danger")
+        return render_template('users/upload.html')
+    
+    # Makes file name secure (without spacing etc.)
+    file.filename = secure_filename(file.filename)
+    output = upload_file_to_s3(file)
+    
+    if not output:
+        flash("Upload was unsuccessful, please try again", "danger")
+        return render_template('users/upload.html')
+    
+    else:
+        flash("Upload successful!", "success")
+        upload_image = User.update(image=output).where(User.id == user.id)
+        upload_image.execute()
+        return redirect(url_for('users.image', id=current_user.id))
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 
 

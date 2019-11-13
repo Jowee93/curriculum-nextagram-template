@@ -1,6 +1,8 @@
 from models.base_model import BaseModel
 import peewee as pw
 from flask_login import UserMixin
+from config import Config
+from playhouse.hybrid import hybrid_property
 
 
 class User(UserMixin, BaseModel):
@@ -8,6 +10,7 @@ class User(UserMixin, BaseModel):
     email = pw.CharField(null=True, unique=True)
     password = pw.CharField(null=True)
     role = pw.CharField(default="user")
+    image = pw.TextField(null=True)
     
     def validate(self):
         duplicate_useremail = User.get_or_none(User.email == self.email)
@@ -17,5 +20,9 @@ class User(UserMixin, BaseModel):
             
     def is_authenticated(self):
         return True
+    
+    # @hybrid_property
+    # def profile_image_url(self):
+    #     return 'https://' + Config.S3_LOCATION +
             
 

@@ -17,10 +17,6 @@ def sign_in():
     
     return render_template('sessions/sign_in.html')
 
-#############################
-# Option 1 : Session method #
-#############################
-
 
 @sessions_blueprint.route('/signin', methods=['POST'])
 def handle_sign_in():
@@ -45,12 +41,6 @@ def handle_sign_in():
     else:
         flash("Username or Password is incorrect. Please try again", "danger")
         return render_template('sessions/sign_in.html')
-    
-
-    
-#################################
-# Option 2 : Flask-Login method #
-#################################
 
 @sessions_blueprint.route('/signout')
 @login_required
