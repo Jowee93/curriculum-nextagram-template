@@ -1,8 +1,9 @@
 <link rel="stylesheet" href="../../static/style.css" />
 
-<form action="{{url_for('donations.create')}}" method="POST">
+<form id="payment-form" action="{{url_for('donations.create')}}" method="POST">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
   <input id="nonce" type="hidden" name="nonce" />
+  <input id="test" name="test" />
   <script src="https://js.braintreegateway.com/web/dropin/1.20.4/js/dropin.min.js"></script>
 
   <div id="dropin-container"></div>
@@ -13,6 +14,7 @@
 <script>
   let button = document.querySelector("#submit-button");
   let input = document.querySelector("#nonce");
+  let form = document.getElementById("payment-form");
 
   braintree.dropin.create(
     {

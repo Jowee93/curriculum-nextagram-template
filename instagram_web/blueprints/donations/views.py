@@ -33,18 +33,22 @@ def new():
 
 @donations_blueprint.route('/pay', methods=['POST'])
 def create():
-    
     donation_amount = amount
+    testing = request.form.get('test')
     
-    nonce_from_the_client = request.form["nonce"]
+    nonce_from_the_client = request.form.get("nonce")
     
     result = gateway.transaction.sale({
-    "amount": "10.00",
-    "payment_method_nonce": nonce_from_the_client,
-    "options": {
-      "submit_for_settlement": True
-    }
-})
+        "amount": "100",
+        "payment_method_nonce": nonce_from_the_client,
+        "options": {
+        "submit_for_settlement": True
+        }
+    })
     
-    flash("Successfully donated !", "success")
-    return redirect(f'images/{current_user.id}/images')
+    print(result)
+      
+    
+    if result.is_success:
+        flash("Successfully donated !", "success")
+        return  redirect(f'images/{current_user.id}/images')
