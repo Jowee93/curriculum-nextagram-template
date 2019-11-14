@@ -5,7 +5,6 @@ import time
 from flask_login import current_user, login_user, logout_user, LoginManager, login_required
 
 
-
 sessions_blueprint = Blueprint('sessions',
                             __name__,
                             template_folder='templates')

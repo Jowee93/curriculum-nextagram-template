@@ -45,7 +45,8 @@ message in messages %}
           </button>
         </div>
         <div class="modal-body">
-          <form action="" method="POST">
+          <form action="{{url_for('donations.new')}}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
             <div class="form-group">
               <label for="amount">Amount to donate</label>
               <input
@@ -55,6 +56,12 @@ message in messages %}
                 placeholder="1"
               />
             </div>
+            <button
+              id="submit-button"
+              class="button button--small button--green"
+            >
+              Donate
+            </button>
           </form>
         </div>
         <div class="modal-footer">
