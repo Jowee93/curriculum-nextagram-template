@@ -25,4 +25,4 @@ def upload_file_to_s3(file, acl="public-read"):
         print("Something Happened: ", e)
         return e
     
-    return f"{Config.S3_LOCATION}{file.filename}"
+    return f"{file.filename}"

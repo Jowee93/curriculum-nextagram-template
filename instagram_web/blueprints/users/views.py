@@ -105,7 +105,7 @@ def update(id):
 def image(id):
     
     user = User.get_by_id(id)
-    return render_template('users/upload.html')
+    return render_template('users/upload.html', id=current_user.id)
 
 @users_blueprint.route('/<id>/upload', methods=['POST'])
 @login_required
@@ -129,7 +129,7 @@ def upload(id):
         return render_template('users/upload.html')
     
     else:
-        flash("Upload successful!", "success")
+        flash("Profile image updated successful!", "success")
         upload_image = User.update(image=output).where(User.id == user.id)
         upload_image.execute()
         return redirect(url_for('users.image', id=current_user.id))

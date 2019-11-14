@@ -32,6 +32,8 @@ def _db_close(exc):
         print(db.close())
     return exc
 
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.get_by_id(user_id)
