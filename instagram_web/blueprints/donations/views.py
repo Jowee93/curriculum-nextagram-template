@@ -3,6 +3,7 @@ from config import Config
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user
+from models.donations import Donation
 
 
 donations_blueprint = Blueprint('donations',
@@ -18,37 +19,37 @@ gateway = braintree.BraintreeGateway(
         )
     )
 
-amount = 0
-
-@donations_blueprint.route('/client_token', methods=['POST'])
+@donations_blueprint.route('/checkout', methods=['POST'])
 def new():
-    global amount
-    
-    amount = request.form.get('amount')
+    image_id = request.form.get('image_id')
     
     token = gateway.client_token.generate()
     
-    return render_template('donations/new.html', token=token)
+    return render_template('donations/new.html', token=token, image_id=image_id)
 
 
 @donations_blueprint.route('/pay', methods=['POST'])
 def create():
-    donation_amount = amount
-    testing = request.form.get('test')
+    amount = request.form.get('amount')
+    
+    image_id = request.form.get('image_id')
     
     nonce_from_the_client = request.form.get("nonce")
     
     result = gateway.transaction.sale({
-        "amount": "100",
+        "amount": amount,
         "payment_method_nonce": nonce_from_the_client,
         "options": {
         "submit_for_settlement": True
         }
     })
-    
-    print(result)
       
-    
     if result.is_success:
         flash("Successfully donated !", "success")
+        donation = Donation(username=current_user.id, image=image_id, amount=amount)
+        donation.save()
         return  redirect(f'images/{current_user.id}/images')
+    
+    else:
+        flash("Error has occured, please try again", "danger")
+        return render_template(url_for('donations.new'))

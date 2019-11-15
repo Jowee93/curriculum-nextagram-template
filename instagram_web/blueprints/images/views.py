@@ -45,7 +45,7 @@ def show(id):
     user = User.get_by_id(id)
     
     if user.id == current_user.id:
-        images = Image.select(Image.image).join(User).where(Image.username==id)
+        images = Image.select().join(User).where(Image.username==id)
         return render_template('images/images.html', images=images, user_id=user.id)
     else:
         flash("You are not authorized to access this page" , "danger")
