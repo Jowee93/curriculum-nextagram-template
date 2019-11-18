@@ -50,19 +50,28 @@ def show(id):
     
     for i in following:
         all_following.append(i)
-    
+      
     access = False
     
     if user in all_following:
         access = True
+        
+    user_following = User.select().join(Follower, on=Follower.user).where(Follower.follower==user.id)
+    num_following = len(user_following)
+    
+    user_followers = User.select().join(Follower, on=Follower.follower).where(Follower.user==user.id)
+    num_followers = len(user_followers)
     
     
     if user.id == current_user.id or access == True:
         images = Image.select().join(User).where(Image.username==id)
-        return render_template('images/images.html', images=images, user_id=user.id, user=user, access=access)
+        num_images = len(images)
+        return render_template('images/images.html', images=images, user_id=user.id, user=user, access=access, num_images=num_images, num_following=num_following, num_followers=num_followers)
     else:
+        images = Image.select().join(User).where(Image.username==id)
+        num_images = len(images)
         flash("This page is private. Request to follow to be able to access this profile's page" , "danger")
-        return render_template('images/images.html', user_id=user.id, user=user, access=access)
+        return render_template('images/images.html', user_id=user.id, user=user, access=access, num_images=num_images, num_following=num_following, num_followers=num_followers)
     
    
     

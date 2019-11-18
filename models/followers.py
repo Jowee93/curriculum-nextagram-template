@@ -13,7 +13,7 @@ class Follower(BaseModel):
 
     @hybrid_property
     def following(self):
-        return (User.select().join(Follower, on=Follower.user).where(Follower.follower==current_user.id))
+        return User.select().join(Follower, on=Follower.user).where(Follower.follower==current_user.id)
     
     @hybrid_property
     def followers(self):
