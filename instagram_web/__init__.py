@@ -8,6 +8,7 @@ from instagram_web.blueprints.followers.views import followers_blueprint
 from flask_assets import Environment, Bundle
 from .util.assets import bundles
 from instagram_web.util.google_oauth import oauth
+from models.user import *
 
 
 assets = Environment(app)
@@ -26,7 +27,9 @@ def internal_server_error(e):
 
 @app.route("/")
 def home():
-    return render_template('home.html')
+    users = User.select()
+    
+    return render_template('home.html', users=users)
 
 
 

@@ -20,7 +20,28 @@
 
 {% endfor %} {% endif %} {% endwith %}
 
-  <h1>Homepage</h1>
+  <div class="header mb-5">
+    <h1>Homepage</h1>
+  </div>
+
+  <div class="row">
+
+    {% for user in users %}
+
+      <div class="col-6 text-center mb-3">
+      <img src="{{user.profile_image_url}}" style="border-radius: 50%; height: 150px; width: 150px;" alt="profile-image" class="mb-3">
+      <span class="d-block">
+        <a href="{{url_for('images.show', id=user.id)}}" style="color: black;text-decoration: underline;">{{user.username}}</a>
+      </span>  
+
+        
+      </div>
+    
+    {% endfor %}
+
+    </div>
+
+ 
  
 {% endblock %}
 

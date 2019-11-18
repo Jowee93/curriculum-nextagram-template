@@ -24,5 +24,4 @@ class User(UserMixin, BaseModel):
     
     @hybrid_property
     def profile_image_url(self):
-       
         return Config.S3_LOCATION + self.image
