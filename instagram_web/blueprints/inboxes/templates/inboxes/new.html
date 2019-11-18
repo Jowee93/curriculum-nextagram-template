@@ -6,7 +6,7 @@
 
 <div class="card">
   <div class="row">
-    <div class="col-3">
+    <div class="col-3 text-center mt-3 mb-3">
       <img
         src="{{user.profile_image_url}}"
         alt="placeholder"
@@ -15,7 +15,7 @@
     </div>
 
     <div class="col-6">
-      <div class="card-body">
+      <div class="card-body mt-3">
         <h5 class="card-title">Follow Request</h5>
         <p class="card-text">
           <a href="{{url_for('images.show', id=user.id)}}">{{user.username}}</a>

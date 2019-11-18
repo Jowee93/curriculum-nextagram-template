@@ -16,9 +16,10 @@ def show(id):
     
     # user_inbox = Inbox.select().join(User, on=Inbox.user).where(Inbox.user_id==current_user.id)
     user_inbox = User.select().join(Inbox, on=Inbox.requestor_id).where(Inbox.user_id==user.id)
+    num_inbox = len(user_inbox)
     
     
-    return render_template('inboxes/new.html', user_inbox=user_inbox)
+    return render_template('inboxes/new.html', user_inbox=user_inbox, num_inbox=num_inbox)
 
 @inboxes_blueprint.route('/<id>/destroy', methods=['POST'])
 def destroy(id):
