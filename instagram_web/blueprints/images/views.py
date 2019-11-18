@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.user import *
 from models.images import *
+from models.followers import *
 from flask_login import login_required, current_user
 from werkzeug import secure_filename
 from instagram_web.util.helpers import upload_file_to_s3
@@ -44,12 +45,24 @@ def show(id):
     
     user = User.get_by_id(id)
     
-    if user.id == current_user.id:
+    following = Follower.following
+    all_following = []
+    
+    for i in following:
+        all_following.append(i)
+    
+    access = False
+    
+    if user in all_following:
+        access = True
+    
+    
+    if user.id == current_user.id or access == True:
         images = Image.select().join(User).where(Image.username==id)
-        return render_template('images/images.html', images=images, user_id=user.id)
+        return render_template('images/images.html', images=images, user_id=user.id, user=user, access=access)
     else:
-        flash("You are not authorized to access this page" , "danger")
-        return render_template('images/images.html', user_id=user.id)
+        flash("This page is private. Request to follow to be able to access this profile's page" , "danger")
+        return render_template('images/images.html', user_id=user.id, user=user, access=access)
     
    
     

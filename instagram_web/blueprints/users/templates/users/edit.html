@@ -1,14 +1,6 @@
-{% extends "_layout.html"%} 
-
-{% block title %}  
-
-{% endblock%} 
-
-{% block content %} 
-
-{% with messages = get_flashed_messages(with_categories=true)
-
-%} {% if messages %} {% for category, message in messages %}
+{% extends "_layout.html"%} {% block title %} {% endblock%} {% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages
+%} {% for category, message in messages %}
 
 <div class="mt-3 alert alert-{{ category }}">{{ message }}</div>
 
@@ -17,22 +9,18 @@
 
 <div class="mt-3 alert alert-danger">{{ errors }}</div>
 
-{% endfor %}
-
-{% if current_user.id == user_id %}
+{% endfor %} {% if current_user.id == user_id %}
 
 <div class="m-3">
   <h1>Edit {{ current_user.username}}'s Profile</h1>
 </div>
-
-
 
 <form
   class="mx-3 needs-validation"
   action="{{ url_for('users.update', id=current_user.id) }}"
   method="POST"
 >
-<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
   <div class="form-group">
     <label for="Username">Username</label>
     <input
@@ -61,6 +49,17 @@
     >
   </div>
   <div class="form-group">
+    <label for="description">Description</label>
+    <input
+      rows="5"
+      type="textarea"
+      class="form-control"
+      id="description"
+      value="{{current_user.description}}"
+      name="description"
+    />
+  </div>
+  <div class="form-group">
     <label for="password">Password</label>
     <input
       type="password"
@@ -74,7 +73,4 @@
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
-{% endif %}
-
-
-{% endblock %}
+{% endif %} {% endblock %}

@@ -6,3 +6,29 @@ followers_blueprint = Blueprint('followers',
                                 __name__, 
                                 template_folder='templates')
 
+
+
+@followers_blueprint.route('/follow', methods=['POST'])
+def follow():
+    user_id = request.form.get('user_id')
+    
+    
+    follow = Follower(user=user_id, follower=current_user.id, status=False)
+    follow.save()    
+    
+    return redirect(url_for('images.show', id=user_id))
+
+@followers_blueprint.route('/unfollow', methods=['POST'])
+def unfollow():
+    user_id = request.form.get('user_id')
+    
+    following = Follower.following
+    all_following = []
+    
+    for i in following:
+        all_following.append(i)
+        
+    user_unfollow = Follower.get(user_id=user_id, follower_id=current_user.id)    
+    user_unfollow.delete_instance()
+    
+    return redirect(url_for('images.show', id=user_id))

@@ -75,20 +75,21 @@ def update(id):
     username = request.form.get("username")
     email = request.form.get("email")
     password = request.form.get("password")
+    description = request.form.get("description")
     
     result = check_password_hash(user.password, password)
     
     if result:
         if user.email == email:
-            update_user = User(id=user.id, username=username)
-            if update_user.save(only=[User.username]):
+            update_user = User(id=user.id, username=username, description=description)
+            if update_user.save(only=[User.username, User.description]):
                 flash(f"Successfully updated profile for: {current_user.username}", "success")
                 return redirect(url_for('users.edit', id=current_user.id))
             else:
                 flash(f"Error: {update_user.errors}", "danger")
                 return redirect(url_for('users.edit', id=current_user.id))
         else:
-            update_user = User(id=user.id, username=username, email=email)
+            update_user = User(id=user.id, username=username, email=email, description=description)
             if update_user.save():
                 flash(f"Successfully updated profile for: {current_user.username}", "success")
                 return redirect(url_for('users.edit', id=current_user.id))
