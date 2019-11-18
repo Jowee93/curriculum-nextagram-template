@@ -8,5 +8,6 @@ from flask_login import current_user
 from playhouse.hybrid import hybrid_property
 
 class Inbox(BaseModel):
-    user_request = pw.ForeignKeyField(Follower)
+    user = pw.ForeignKeyField(User)
+    requestor = pw.ForeignKeyField(User)
     status = pw.CharField(default="Pending")

@@ -1,0 +1,43 @@
+{% extends '_layout.html' %} {% block content %}
+
+<h1>My Inbox</h1>
+
+{% for user in user_inbox %}
+
+<div class="card">
+  <div class="row">
+    <div class="col-3">
+      <img
+        src="{{user.profile_image_url}}"
+        alt="placeholder"
+        style="border-radius: 50%; height: 150px; width: 150px;"
+      />
+    </div>
+
+    <div class="col-6">
+      <div class="card-body">
+        <h5 class="card-title">Follow Request</h5>
+        <p class="card-text">
+          <a href="{{url_for('images.show', id=user.id)}}">{{user.username}}</a>
+          has requested to follow you.
+        </p>
+
+        <form
+          class="d-inline-block"
+          action="{{url_for('inboxes.destroy', id=user.id)}}"
+          method="POST"
+        >
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <input type="hidden" name="user_id" value="{{ user.id }}" />
+          <button type="submit" class="btn btn-success">Allow</button>
+        </form>
+
+        <form class="d-inline-block" action="">
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endfor %} {% endblock %}

@@ -53,6 +53,17 @@ def show(id):
       
     access = False
     
+    
+    query = Follower.select(Follower.status).where(Follower.user_id==user.id, Follower.follower_id==current_user.id)
+    
+    query_status = True
+    
+    for i in query:
+        print("i is: ")
+        print(i.status)
+        query_status = i.status   
+        
+    
     if user in all_following:
         access = True
         
@@ -63,13 +74,17 @@ def show(id):
     num_followers = len(user_followers)
     
     
-    if user.id == current_user.id or access == True:
-        images = Image.select().join(User).where(Image.username==id)
-        num_images = len(images)
+    images = Image.select().join(User).where(Image.username==id)
+    num_images = len(images)
+    
+    if query_status == False:
+        flash("Awaiting follow request to be approved", "warning")
+        return render_template('images/images.html', user_id=user.id, user=user, access=access, num_images=num_images, num_following=num_following, num_followers=num_followers, query_status=query_status)
+    
+    elif user.id == current_user.id or access == True:
         return render_template('images/images.html', images=images, user_id=user.id, user=user, access=access, num_images=num_images, num_following=num_following, num_followers=num_followers)
+    
     else:
-        images = Image.select().join(User).where(Image.username==id)
-        num_images = len(images)
         flash("This page is private. Request to follow to be able to access this profile's page" , "danger")
         return render_template('images/images.html', user_id=user.id, user=user, access=access, num_images=num_images, num_following=num_following, num_followers=num_followers)
     

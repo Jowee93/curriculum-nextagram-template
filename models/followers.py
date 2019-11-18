@@ -9,7 +9,7 @@ from playhouse.hybrid import hybrid_property
 class Follower(BaseModel):
     user = pw.ForeignKeyField(User)
     follower = pw.ForeignKeyField(User)
-    status = pw.BooleanField()
+    status = pw.BooleanField(null=True, default="")
 
     @hybrid_property
     def following(self):

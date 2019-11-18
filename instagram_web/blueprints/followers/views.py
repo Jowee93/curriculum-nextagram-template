@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, request, url_for, flash
 from models.followers import *
+from models.inboxes import *
 from flask_login import login_required, current_user
 
 followers_blueprint = Blueprint('followers', 
@@ -11,12 +12,13 @@ followers_blueprint = Blueprint('followers',
 @followers_blueprint.route('/follow', methods=['POST'])
 def follow():
     user_id = request.form.get('user_id')
-    
+    inbox = Inbox(user=user_id, requestor=current_user.id, status="Pending")
+    inbox.save()
     
     follow = Follower(user=user_id, follower=current_user.id, status=False)
     follow.save()    
     
-    return redirect(url_for('images.show', id=user_id))
+    return redirect(url_for('images.show', id=user_id, inbox=inbox))
 
 @followers_blueprint.route('/unfollow', methods=['POST'])
 def unfollow():
