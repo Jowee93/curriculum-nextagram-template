@@ -41,3 +41,9 @@ footer a {
   background: red;
   color: white;
 }
+
+#blah {
+  max-width: 180px;
+}
+
+

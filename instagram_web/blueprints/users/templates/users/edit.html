@@ -12,6 +12,29 @@
 {% endfor %} {% if current_user.id == user_id %}
 
 <div class="m-3">
+  <h1>Update Profile Image</h1>
+</div>
+
+<form
+  action="{{url_for('users.upload', id=current_user.id)}}"
+  method="POST"
+  enctype="multipart/form-data"
+  class="m-3"
+>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+  <img
+    id="img-previewer"
+    src="http://placehold.it/180"
+    alt="image-preview"
+    class="d-block mt-3 mb-3"
+  />
+  <input type="file" name="user_file" onchange="readURL(this);" class="mb-3" />
+  <br />
+  <button class="btn btn-primary" type="submit">Upload</button>
+</form>
+
+<div class="m-3">
   <h1>Edit {{ current_user.username}}'s Profile</h1>
 </div>
 
@@ -72,5 +95,19 @@
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+
+<script>
+  function readURL(input) {
+    if (input.files && input.files[0]) {
+      let reader = new FileReader();
+
+      reader.onload = function(e) {
+        $("#img-previewer").attr("src", e.target.result);
+      };
+
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+</script>
 
 {% endif %} {% endblock %}

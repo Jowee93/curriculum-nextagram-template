@@ -106,7 +106,7 @@ def update(id):
 def image(id):
     
     user = User.get_by_id(id)
-    return render_template('users/upload.html', id=current_user.id)
+    return render_template('users/edit.html', id=current_user.id)
 
 @users_blueprint.route('/<id>/upload', methods=['POST'])
 @login_required
@@ -119,7 +119,7 @@ def upload(id):
     
     if not file:
         flash("Please choose a file to upload", "danger")
-        return render_template('users/upload.html')
+        return render_template('users/edit.html')
     
     # Makes file name secure (without spacing etc.)
     file.filename = secure_filename(file.filename)
@@ -127,13 +127,13 @@ def upload(id):
     
     if not output:
         flash("Upload was unsuccessful, please try again", "danger")
-        return render_template('users/upload.html')
+        return render_template('users/edit.html')
     
     else:
         flash("Profile image updated successful!", "success")
         upload_image = User.update(image=output).where(User.id == user.id)
         upload_image.execute()
-        return redirect(url_for('users.image', id=current_user.id))
+        return redirect(url_for('users.edit', id=current_user.id))
     
     
     

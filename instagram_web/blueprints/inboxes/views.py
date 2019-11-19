@@ -36,6 +36,22 @@ def destroy(id):
     delete.execute()
     
     return redirect(url_for('inboxes.show', id=current_user.id))
+
+@inboxes_blueprint.route('/<id>/denied', methods=['POST'])
+def denied(id):
+    
+    user = User.get_by_id(id)
+    user_id = request.form.get('user_id')
+    
+    follow = Follower.delete().where(Follower.user_id==current_user.id, Follower.follower_id==user_id)
+    
+    follow.execute()
+    
+    # delete = Inbox.get(Inbox.user_id==current_user.id)
+    delete = Inbox.delete().where(Inbox.user_id==current_user.id and Inbox.requestor_id==user_id)
+    delete.execute()
+    
+    return redirect(url_for('inboxes.show', id=current_user.id))
     
 
 
