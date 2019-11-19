@@ -85,6 +85,11 @@ message in messages %}
     <form action="{{url_for('donations.new')}}" method="POST">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       <input type="hidden" name="image_id" value="{{ image.id }}" />
+      <input
+        type="hidden"
+        name="image_user_id"
+        value="{{ image.username_id }}"
+      />
       <button class="btn btn-primary d-block mb-3" data-target="#exampleModal">
         Donate
       </button>

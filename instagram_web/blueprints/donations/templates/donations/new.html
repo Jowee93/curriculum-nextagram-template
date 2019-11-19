@@ -3,6 +3,7 @@
 <form id="payment-form" action="{{url_for('donations.create')}}" method="POST">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
   <input type="hidden" name="image_id" value="{{ image_id }}" />
+  <input type="hidden" name="image_user_id" value="{{ image_user_id }}" />
   <input id="nonce" type="hidden" name="nonce" />
 
   <div class="form-group">

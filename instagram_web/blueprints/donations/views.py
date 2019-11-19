@@ -22,10 +22,11 @@ gateway = braintree.BraintreeGateway(
 @donations_blueprint.route('/checkout', methods=['POST'])
 def new():
     image_id = request.form.get('image_id')
+    image_user_id = request.form.get('image_user_id')
     
     token = gateway.client_token.generate()
     
-    return render_template('donations/new.html', token=token, image_id=image_id)
+    return render_template('donations/new.html', token=token, image_id=image_id, image_user_id=image_user_id)
 
 
 @donations_blueprint.route('/pay', methods=['POST'])
@@ -33,6 +34,7 @@ def create():
     amount = request.form.get('amount')
     
     image_id = request.form.get('image_id')
+    image_user_id = request.form.get('image_user_id')
     
     nonce_from_the_client = request.form.get("nonce")
     
@@ -43,12 +45,14 @@ def create():
         "submit_for_settlement": True
         }
     })
+    
+    # breakpoint
       
     if result.is_success:
         flash("Successfully donated !", "success")
         donation = Donation(username=current_user.id, image=image_id, amount=amount)
         donation.save()
-        return  redirect(f'images/{current_user.id}/images')
+        return  redirect(f'images/{image_user_id}/images')
     
     else:
         flash("Error has occured, please try again", "danger")
