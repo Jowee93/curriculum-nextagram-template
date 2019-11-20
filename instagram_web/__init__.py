@@ -30,7 +30,7 @@ def internal_server_error(e):
 
 @app.route("/")
 def home():
-    users = User.select()
+    users = User.select().order_by(User.id)
        
     return render_template('home.html', users=users)
 
